@@ -1,0 +1,78 @@
+#include<stdio.h>
+#include<gl/glut.h>
+#include<conio.h>
+#include<math.h>
+int ch;
+GLfloat theta;
+GLfloat h=150.0; GLfloat k=50.0;
+GLfloat T[2][9]={  {150,300,250},{50,50,250}
+};
+void init()
+{
+	glClearColor(1.0,1.0,1.0,1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(-500.0,500.0,-500.0,-500.0);    //if(0,500.0,500) rotated trangle will display out of window.
+	glMatrixMode(GL_MODELVIEW);
+}
+void drawtriangle()
+{
+	glColor3f(0.0,1.0,0.0);  //some color
+	glBegin(GL_LINE_LOOP);
+	       glVertex2f(T[0][1],T[1][1]);
+	       glVertex2f(T[0][2],T[1][2]);
+    glEnd();
+}
+void rotateorigin()
+{
+	glRotatef(theta,0.0,0.0,1.0);  //2.rotating... with respect to z-axis,(theta,x,y,z)
+	glTranslatef(-h,-k,0.0);      //1.transllatr tonabout origin
+}
+void rotatefixedpoint()
+{
+	glTranslatef(h,k,0.0);  //3.translate back position on which we have to rotate.
+	glRotatef(theta,0.0,0.0,1.0); //2.rotating.... with respect to z-axis,(theta,x,y,z)
+    glTranslatef(-h,-k,0.0);  //1.translate to origin
+}
+ void display()
+ {
+	printf("********TRINAGLE ROTATION*********\n\n");
+	printf("1. ROTATION ABOUT ORIGIN\n2. ROTATION ABOUT FIXED POINT \n\n");
+
+	printf("Enter your choice:");
+	scanf("%d",&ch);
+	printf("Enter the rotation angle\n");
+	scanf("%f",&theta);
+	printf(" TO VIEW OUTPUT CLICK ON WINDOW");
+	switch(ch)
+	{
+		case 1:     drawtriangle();
+		             rotateorigin();
+		             drawtriangle();
+		             glFlush();
+		             break;
+		case 2:
+		         drawtriangle();
+				 rotatefixedpoint();
+				 drawtriangle();
+				 glFlush;
+				 break;
+	}
+ }
+main(int argc,char**argv)
+ {
+	 glutInit(&argc,argv);
+	 glutInitWindowSize(500,500);
+	 glutInitWindowPosition(0,0);
+	 glutCreateWindow("triangle rotation");
+
+	 glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+	 init();
+	 glutDisplayFunc(display);
+
+	 glutMainLoop();
+ }
+
+
